@@ -21,9 +21,27 @@ class UserLoginController extends Controller
         if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
             $user = Auth::user();
             $success_token['token'] = $user->createToken('SELS')->accessToken;
-            return response()->json(['success'=>$success_token],$this->HTTP_STATUS);
+            if(Auth::user()->is_permission==1){
+                $success_token['user_type']="super";
+            }
+            if(Auth::user()->is_permission==2){
+                $success_token['user_type']="admin";
+            }
+            if(Auth::user()->is_permission==3){
+                $success_token['user_type']="employee";
+            }
+            if(Auth::user()->is_permission==4){
+                $success_token['user_type']="vendor";
+            }
+            if(Auth::user()->is_permission==5){
+                $success_token['user_type']="executive";
+            }
+            if(Auth::user()->is_permission==6){
+                $success_token['user_type']="driver";
+            }
+            return response()->json(['success'=>$success_token],200);
         }else{
-            return response()->json(['error' => 'Unauthorized','message'=>'Please enter valid email and password'],401);
+            return response()->json(['error'=>'Access Denied']);
         }
     }
 

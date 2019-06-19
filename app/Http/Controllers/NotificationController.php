@@ -25,13 +25,24 @@ class NotificationController extends Controller
 
 
     //order approve admin or super admin wise
-    public function order_approve(Request $request){
+    public function order_approve($id){
+      $id= base64_decode($id);
 
-        $data=DB::table('tborder_details')->where('id',$request->order_id)->update([
-            'status' =>1
+        $data=DB::table('tborder_details')->where('id',$id)->update([
+           'status' =>1
         ]);
-         Session::flash('success','Order has been Approved.');
-         return redirect()->route('approve_order_list');
+        Session::flash('success','Order has been Approved.');
+        return redirect()->back();
+    }
+
+
+    public function order_approve_by_admin(Request $request){
+    
+        $data=DB::table('tborder_details')->where('id',$request->order_ids)->update([
+           'status' =>1
+        ]);
+        Session::flash('success','Order has been Approved.');
+        return redirect()->back();
     }
 
     //order cancel admin or super admin wise

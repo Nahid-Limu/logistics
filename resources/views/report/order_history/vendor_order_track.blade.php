@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Track Order</div>
+            <div class="page-title"><b>Track Order</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -67,11 +67,58 @@
                     <div class="panel-footer"></div>
                 </div>
             </div>
+
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-blue">
+                    <div class="panel-heading">
+                        All Order
+                    </div>
+                    <div class="panel-body">
+
+                        <form action="{{ route('vendor.track.order.data.all.date')}}" method="post">
+                            @csrf
+                        
+                        <div class="form-group">
+                            <label for="start_date">Start Date</label>
+                            <input name="start_date" value="{{date('Y-m-d')}}" type="text" class="form-control form-white" id="datepicker1" required />
+                        </div>
+
+                        <br/>
+                        <div class="form-group">
+                            <label for="end_date">End Date</label>
+                            <input name="end_date" value="{{date('Y-m-d')}}" type="text" class="form-control form-white" id="datepicker2" required />
+                        </div>
+
+                        <br />
+                        
+                        <hr>
+                        <div class="form-group">
+                            <button type="submit" name='submit_type' value="preview" class="btn btn-primary"><i class="fa fa-search"></i> Preview</button>
+                            <!-- <button type="submit" name='submit_type' value="pdf" class="btn btn-success"><i class="fa fa-download"></i> Download as PDF</button> -->
+                            <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> Reset</button>
+                        </div>
+
+                        </form>
+
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
 @section('extra_js')
     <script>
+            $( function() {
+
+                $( "#datepicker1" ).datepicker({
+                    dateFormat:'yy-mm-dd',
+                });
+                $( "#datepicker2" ).datepicker({
+                    dateFormat:'yy-mm-dd',
+                });
+                $("#vendorId").select2();
+            });
         $('.classtwo').select2({width: 'resolve'});
     </script>
 @endsection

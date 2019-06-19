@@ -8,7 +8,7 @@
             <div class="dropdown-slimscroll">
                 <ul>
                     @foreach($count_pending_order as $count_pending)
-                        <li><a href="{{route('pending_notification_list',$count_pending->vendor_id)}}"><span class="label label-green"><i class="fa fa-shopping-cart"></i></span> <b>{{$count_pending->name}}</b> has {{$count_pending->order_count}} Pending Order <span class="pull-right text-muted small">{{ \Carbon\Carbon::parse($count_pending->created_at)->diffForHumans() }}</span> </a></li>
+                        <li><a href="{{url('pending/notify'.'/'.$count_pending->vendor_id)}}"><span class="label label-green"><i class="fa fa-shopping-cart"></i></span> <b>{{$count_pending->name}}</b> has {{$count_pending->order_count}} Pending Order <span class="pull-right text-muted small">{{ \Carbon\Carbon::parse($count_pending->created_at)->diffForHumans() }}</span> </a></li>
                     @endforeach
                 </ul>
             </div>

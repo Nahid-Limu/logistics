@@ -33,7 +33,52 @@ class EmployeeController extends Controller
             ->paginate('50');
 //        return $employees;
         return view('employee.driver_index',compact('employees'));
-    }
+    } 
+
+    public function diver_delete($id){
+    
+        $id=base64_decode($id);
+          $employeeId=DB::table('tborder_employee')->where('employeeId','=',$id)->select('tborder_employee.employeeId')->first();
+
+
+        if(!$employeeId){
+            DB::table('employee')->where('id','=',$id)->delete();
+            DB::table('users')->where('emp_id','=',$id)->delete();
+            DB::table('nominee')->where('emp_id','=',$id)->delete();
+            DB::table('employee_education')->where('emp_id','=',$id)->delete();
+            DB::table('driving_info')->where('emp_id','=',$id)->delete();
+            DB::table('tb_driver_rating')->where('driver_id','=',$id)->delete();
+        }else{
+            //  Session::flash('message', 'Size information has been employee Not deleted. ');
+            // dd(!$employeeId);
+             Session::flash('success', "you can't delete this employee because there is an dependancy in another table !");
+        }
+        Session::flash('success', 'Employee has been successfully deleted. ');
+        return redirect()->back();
+    } 
+    
+    public function employee_delete($id){
+    
+        $id=base64_decode($id);
+          $employeeId=DB::table('employee')->where('id','=',$id)->select('employee.id')->first();
+
+
+        if($employeeId){
+            DB::table('employee')->where('id','=',$id)->delete();
+            DB::table('users')->where('emp_id','=',$id)->delete();
+            DB::table('nominee')->where('emp_id','=',$id)->delete();
+            DB::table('employee_education')->where('emp_id','=',$id)->delete();
+            Session::flash('success', 'Employee has been successfully deleted. ');
+        }else{
+             Session::flash('success', "you can't delete this employee because there is an dependancy in another table !");
+        }
+        Session::flash('success', 'Employee has been successfully deleted.');
+        return redirect()->back();
+
+    } 
+
+
+    
 
     public function create(){
         $areas=DB::table('tbarea')->get(['id','name']);

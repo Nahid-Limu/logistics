@@ -285,6 +285,7 @@
             </div>
         </div>
     @endforeach
+    @endsection
 
 @section('extra_js')
 <script>
@@ -293,6 +294,6 @@
     });
 </script>
 @endsection
-@endsection
+
 
 

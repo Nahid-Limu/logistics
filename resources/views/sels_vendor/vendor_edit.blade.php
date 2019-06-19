@@ -368,7 +368,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Password<span style="color: red">*</span></label>
-                                                    <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Password" required>
+                                                    <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Password" value="123456" required>
                                                 </div>
                                             </div>
 
@@ -446,7 +446,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="photo">Attachment</label>
+                                                    <label for="photo">Photo</label>
                                                     <input type="file" class="form-control" id="photo" name="photo">
                                                 </div>
                                             </div>
@@ -471,7 +471,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Select Area<span style="color: red">*</span></label>
-                                                    <select class="form-control classname" id="areaId" name="areaId">
+                                                    <select style="width: 100%" class="form-control classname" id="areaId" name="areaId">
                                                         @foreach($area as $areas)
                                                             @php
                                                                 $selected = '';
@@ -489,7 +489,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Select Zone<span style="color: red">*</span></label>
-                                                    <select class="form-control classname_zone" id="zoneId" name="zoneId">
+                                                    <select style="width: 100%" class="form-control classname_zone" id="zoneId" name="zoneId">
                                                         @foreach($zone as $zones)
                                                             @php
                                                                 $selected = '';
@@ -526,6 +526,7 @@
             </div>
         </div>
     @endforeach
+    @endsection
 
 @section('extra_js')
     <script>
@@ -558,7 +559,3 @@
     });
     </script>
 @endsection
-@endsection
-
-
-

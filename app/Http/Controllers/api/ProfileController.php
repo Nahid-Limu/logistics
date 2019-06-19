@@ -93,7 +93,7 @@ class ProfileController extends Controller
         ->where('users.vendor_id',auth()->user()->vendor_id)
         ->first();
         $path = asset('vendor_image/'.$profile->photo);
-        return response()->json([['profile',$profile],['filepath'=>$path]]);
+        return response()->json(['profile'=>$profile,'file_path'=>$path]);
     }
 
     //vendor profile update
@@ -155,7 +155,6 @@ class ProfileController extends Controller
 
     //zone show area wise
     public function area_zone_show(Request $request){
-
         $zone=DB::table('tbzone')->where('areaId',$request->areaId)->select('id','name')->get();
         return response()->json($zone);
     }

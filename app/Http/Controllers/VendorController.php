@@ -70,7 +70,7 @@ class VendorController extends Controller
             ]);
         }else{
             $photoName = time().'.'.$request->photo->getClientOriginalExtension();
-            $request->photo->move(public_path('vendor_image'), $photoName);
+            $request->photo->move(('vendor_image'), $photoName);
             $vendor = DB::table('tbvendor')->insert([
                 'selsVendorId' => $this->random_id(),
                 'areaId' => $request->areaId,
@@ -123,15 +123,15 @@ class VendorController extends Controller
         WHERE vendor_table.id=$id ");
 
         $order_list=DB::table('tborder_details')
-        ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
-        ->leftjoin('tbzone','tborder_details.zoneId','=','tbzone.id')
-        ->leftjoin('tboffice_location','tborder_details.pickupLocationId','=','tboffice_location.id')
-        ->leftjoin('tbdimension','tborder_details.productDimension','=','tbdimension.id')
-        ->leftjoin('tblocation','tborder_details.destinationLocationId','=','tblocation.id')
-        ->select('tborder_details.*','tbvendor.name as vendor_name','tbzone.name as zone_name','tboffice_location.branchName','tbdimension.weight','tbdimension.size','tblocation.name as destination')
-        ->where('tborder_details.vendorId',$id)
-        ->orderBy('tborder_details.id','DESC')
-        ->get();
+            ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
+            ->leftjoin('tbzone','tborder_details.zoneId','=','tbzone.id')
+            ->leftjoin('tboffice_location','tborder_details.pickupLocationId','=','tboffice_location.id')
+            ->leftjoin('tbdimension','tborder_details.productDimension','=','tbdimension.id')
+            ->leftjoin('tblocation','tborder_details.destinationLocationId','=','tblocation.id')
+            ->select('tborder_details.*','tbvendor.name as vendor_name','tbzone.name as zone_name','tboffice_location.branchName','tbdimension.weight','tbdimension.size','tblocation.name as destination')
+            ->where('tborder_details.vendorId',$id)
+            ->orderBy('tborder_details.id','DESC')
+            ->get();
 
         return view('sels_vendor.vendor_show',compact('vendor','order_list'));
 
@@ -181,7 +181,7 @@ class VendorController extends Controller
             }
             else{
                 $photoName = time().'.'.$request->photo->getClientOriginalExtension();
-                $request->photo->move(public_path('vendor_image'), $photoName);
+                $request->photo->move(('vendor_image'), $photoName);
                 $vendor = DB::table('tbvendor')->where('id', $request->vendor_id)->update([
                     'name' => $request->name,
                     'areaId' => $request->areaId,
@@ -205,14 +205,14 @@ class VendorController extends Controller
                 ]);
             }
         }
-            $userData = DB::table('users')->where('vendor_id',$request->vendor_id)->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request['password']),
-                'is_permission' => 4,
-                'created_at' => Carbon::now()->toDateTimeString(),
-                'updated_at' => Carbon::now()->toDateTimeString(),
-            ]);
+        $userData = DB::table('users')->where('vendor_id',$request->vendor_id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request['password']),
+            'is_permission' => 4,
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ]);
 
         Session::flash('success','Vendor has been Successfully Update');
         return redirect(route('vendor_list'));
@@ -254,10 +254,10 @@ class VendorController extends Controller
 
     public function delivery_charge_view(){
         $data=DB::table('delivery_charge')
-        ->leftjoin('tbvendor','delivery_charge.vendorId','=','tbvendor.id')
-        ->select('delivery_charge.vendorId','tbvendor.name')
-        ->groupBy('delivery_charge.vendorId')
-        ->get();
+            ->leftjoin('tbvendor','delivery_charge.vendorId','=','tbvendor.id')
+            ->select('delivery_charge.vendorId','tbvendor.name')
+            ->groupBy('delivery_charge.vendorId')
+            ->get();
         return view('sels_vendor.dimension.viewdata',compact('data'));
     }
 
@@ -268,19 +268,19 @@ class VendorController extends Controller
             return redirect()->back();
         }
         $single_vendor=DB::table('delivery_charge')
-        ->leftjoin('tbvendor','delivery_charge.vendorId','=','tbvendor.id')
-        ->select('tbvendor.name')
-        ->select('tbvendor.name','tbvendor.id')
-        ->where('delivery_charge.vendorId',$request->vendorId)
-        ->first();
+            ->leftjoin('tbvendor','delivery_charge.vendorId','=','tbvendor.id')
+            ->select('tbvendor.name')
+            ->select('tbvendor.name','tbvendor.id')
+            ->where('delivery_charge.vendorId',$request->vendorId)
+            ->first();
         $dimension=DB::table('delivery_charge')
-        ->leftjoin('tbdimension','delivery_charge.dimensionId','=','tbdimension.id')
+            ->leftjoin('tbdimension','delivery_charge.dimensionId','=','tbdimension.id')
 
-        ->select('tbdimension.weight','tbdimension.size','delivery_charge.price')
+            ->select('tbdimension.weight','tbdimension.size','delivery_charge.price')
 
-        ->select('tbdimension.weight','tbdimension.size','delivery_charge.price','delivery_charge.dimensionId')
-        ->where('delivery_charge.vendorId',$request->vendorId)
-        ->get();
+            ->select('tbdimension.weight','tbdimension.size','delivery_charge.price','delivery_charge.dimensionId')
+            ->where('delivery_charge.vendorId',$request->vendorId)
+            ->get();
         return view('sels_vendor.dimension.deliverychargeupdate',compact('single_vendor','dimension'));
     }
 
@@ -328,18 +328,18 @@ class VendorController extends Controller
     }
 
     public function track_order(){
-       $lastorder=DB::table('tborder_details')
-       ->select('tborder_details.id','tborder_details.selsOrderId')
-       ->where('tborder_details.vendorId',auth()->user()->vendor_id)
-       ->orderBy('tborder_details.id','DESC')
-       ->take(1)->get();
+        $lastorder=DB::table('tborder_details')
+            ->select('tborder_details.id','tborder_details.selsOrderId')
+            ->where('tborder_details.vendorId',auth()->user()->vendor_id)
+            ->orderBy('tborder_details.id','DESC')
+            ->take(1)->get();
 
-       $orderid=DB::table('tborder_details')
-       ->select('tborder_details.id','tborder_details.selsOrderId')
-       ->where('tborder_details.vendorId',auth()->user()->vendor_id)
-       ->orderBy('tborder_details.id','DESC')
-       ->get();
-       return view('report.order_history.vendor_order_track',compact('orderid','lastorder'));
+        $orderid=DB::table('tborder_details')
+            ->select('tborder_details.id','tborder_details.selsOrderId')
+            ->where('tborder_details.vendorId',auth()->user()->vendor_id)
+            ->orderBy('tborder_details.id','DESC')
+            ->get();
+        return view('report.order_history.vendor_order_track',compact('orderid','lastorder'));
     }
 
     public function track_order_data(Request $request){
@@ -351,7 +351,7 @@ class VendorController extends Controller
             ->select('tborder_details.*','tborder_details.selsOrderId','tborder_details.receiverName','tborder_details.receiverPhone','tborder_details.receiverAddress','tborder_details.productTitle as p_title','tborder_details.productPrice','tborder_details.productQuantity','tborder_details.deliveryLimitDate','tborder_details.deliveryLimitTime','tborder_details.receivedAmount','tborder_details.paymentMethod','tborder_details.deliveryCharge','tborder_details.receivedVerification','tborder_details.receivedSignature','tborder_details.status as order_status','tborder_employee.status as assigned_status','users.name as assignby','employee.name as assignto','employee.selsEmployeeId','tbdimension.weight','tbdimension.size')
             ->where('tborder_details.id',$request->orderid)
             ->get();
-       return view('report.order_history.vendor_order_track_data',compact('data'));
+        return view('report.order_history.vendor_order_track_data',compact('data'));
     }
 
     public function track_order_data_all(Request $request){
@@ -365,33 +365,61 @@ class VendorController extends Controller
             ->get();
         return view('report.order_history.vendor_order_track_data_all',compact('data'));
     }
+    
+    public function track_order_data_all_date_wise(Request $request){
+        
+        $datas=DB::table('tborder_details')
+            ->leftjoin('tborder_employee','tborder_details.id','=','tborder_employee.orderId')
+            ->leftjoin('users','tborder_employee.assignedBy','=','users.id')
+            ->leftjoin('employee','tborder_employee.employeeId','=','employee.id')
+            ->leftjoin('tbdimension','tborder_details.productDimension','=','tbdimension.id')
+            ->select('tborder_details.id as orderid','tborder_details.order_date','tborder_details.selsOrderId','tborder_details.receiverName','tborder_details.receiverPhone','tborder_details.receiverAddress','tborder_details.productTitle as p_title','tborder_details.productPrice','tborder_details.productQuantity','tborder_details.deliveryLimitDate','tborder_details.deliveryLimitTime','tborder_details.receivedAmount','tborder_details.paymentMethod','tborder_details.deliveryCharge','tborder_details.receivedVerification','tborder_details.receivedSignature','tborder_details.status as order_status','tborder_employee.status as assigned_status','users.name as assignby','employee.name as assignto','employee.selsEmployeeId','tbdimension.weight','tbdimension.size')
+            ->WhereBetween('tborder_details.order_date',[$request->start_date,$request->end_date])
+            ->get();
+            //dd($datas);
+        return view('report.order_history.vendor_ordel_track_date_wise', compact('datas'));
+    }
 
-    public function create_rating(){
+    public function track_order_data_details($id){
+        $id = base64_decode($id);
+        $data=DB::table('tborder_details')
+            ->leftjoin('tborder_employee','tborder_details.id','=','tborder_employee.orderId')
+            ->leftjoin('users','tborder_employee.assignedBy','=','users.id')
+            ->leftjoin('employee','tborder_employee.employeeId','=','employee.id')
+            ->leftjoin('tbdimension','tborder_details.productDimension','=','tbdimension.id')
+            ->select('tborder_details.*','tborder_details.selsOrderId','tborder_details.receiverName','tborder_details.receiverPhone','tborder_details.receiverAddress','tborder_details.productTitle as p_title','tborder_details.productPrice','tborder_details.productQuantity','tborder_details.deliveryLimitDate','tborder_details.deliveryLimitTime','tborder_details.receivedAmount','tborder_details.paymentMethod','tborder_details.deliveryCharge','tborder_details.receivedVerification','tborder_details.receivedSignature','tborder_details.status as order_status','tborder_employee.status as assigned_status','users.name as assignby','employee.name as assignto','employee.selsEmployeeId','tbdimension.weight','tbdimension.size')
+            ->where('tborder_details.id',$id)
+            ->get();
+        return view('report.order_history.vendor_order_track_data_all',compact('data'));
+    }
 
-     $vendor_rating=DB::table('tborder_details')
-     ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
-     ->leftjoin('tb_vendor_rating','tb_vendor_rating.order_id','=','tborder_details.id')
-     ->select('tborder_details.selsOrderId','tb_vendor_rating.vendor_status as rating_status','tbvendor.name as vendor','tborder_details.id as orderid','tbvendor.id as vendor_id')
-     ->where('tborder_details.status',3)
-     ->paginate(50);
+    public function create_rating_vendor(){
+        $vendor_rating=DB::table('tborder_details')
+            ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
+            ->leftjoin('tb_vendor_rating','tb_vendor_rating.order_id','=','tborder_details.id')
+            ->select('tborder_details.selsOrderId','tb_vendor_rating.vendor_status as rating_status','tbvendor.name as vendor','tborder_details.id as orderid','tbvendor.id as vendor_id')
+            ->where('tborder_details.status',3)
+            ->get();
+        return view('ratings.vendor.create_rating',compact('vendor_rating'));
+    }
 
-
-     $driver_rating=DB::table('tborder_employee')
-     ->leftjoin('tborder_details','tborder_employee.orderId','=','tborder_details.id')
-     ->leftjoin('tb_driver_rating','tborder_employee.employeeId','=','tb_driver_rating.driver_id')
-     ->leftjoin('employee','tborder_employee.employeeId','=','employee.id')
-     ->select('tborder_details.selsOrderId','tb_driver_rating.driver_status as rating_status','employee.name as driver','tborder_employee.status as delivery_status','tborder_details.id as orderid','employee.id as emp_id')
-     ->where('tborder_employee.status',3)
-     ->paginate(50);
-      return view('ratings.create_rating',compact('driver_rating','vendor_rating'));
+    public function create_rating_driver(){
+        $driver_rating=DB::table('tborder_employee')
+            ->leftjoin('tborder_details','tborder_employee.orderId','=','tborder_details.id')
+            ->leftjoin('tb_driver_rating','tborder_employee.employeeId','=','tb_driver_rating.driver_id')
+            ->leftjoin('employee','tborder_employee.employeeId','=','employee.id')
+            ->select('tborder_details.selsOrderId','tb_driver_rating.driver_status as rating_status','employee.name as driver','tborder_employee.status as delivery_status','tborder_details.id as orderidss','employee.id as emp_id')
+            ->where('tborder_employee.status',3)
+            ->get();
+        return view('ratings.driver.create_rating',compact('driver_rating'));
     }
 
     public function driver_rating_store(Request $request){
-         $rating=DB::table('tb_driver_rating')->insert([
+        $rating=DB::table('tb_driver_rating')->insert([
             'order_id'=>$request->order_id,
             'driver_id'=>$request->driver_id,
             'driver_rating'=>$request->driver_rating
-         ]);
+        ]);
         Session::flash('success','Rating has been successfully Completed');
         return redirect()->back();
     }
@@ -408,13 +436,13 @@ class VendorController extends Controller
 
 
     public function order_id_wise_rating_vendor(){
-       $rating_vendor=DB::table('tb_vendor_rating')
-       ->leftjoin('tborder_details','tb_vendor_rating.order_id','=','tborder_details.id')
-       ->select('tborder_details.selsOrderId','tb_vendor_rating.vendor_rating')
-       ->where('tb_vendor_rating.vendor_id',auth()->user()->vendor_id)
-       ->orderBy('tb_vendor_rating.order_id','DESC')
-       ->get();
-      return view('sels_vendor.order.rating.vendor_rating',compact('rating_vendor'));
+        $rating_vendor=DB::table('tb_vendor_rating')
+            ->leftjoin('tborder_details','tb_vendor_rating.order_id','=','tborder_details.id')
+            ->select('tborder_details.selsOrderId','tb_vendor_rating.vendor_rating')
+            ->where('tb_vendor_rating.vendor_id',auth()->user()->vendor_id)
+            ->orderBy('tb_vendor_rating.order_id','DESC')
+            ->get();
+        return view('sels_vendor.order.rating.vendor_rating',compact('rating_vendor'));
     }
 
 }

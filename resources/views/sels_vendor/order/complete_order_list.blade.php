@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title"> Approved Order List</div>
+            <div class="page-title"> <b>Approved Order List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -63,7 +63,7 @@
                                 @endif
                             </td>
                             <td>
-                                <a target="_blank" class="view-modal-btn" href="{{route('complete_order_lists_details_vendor',$complete_order->id)}}"><button type="button" class="btn btn-blue btn-xs"><i class="fa fa-eye"></i></button></a>
+                                <a target="_blank" class="view-modal-btn" href="{{route('complete_order_lists_details_vendor',base64_encode($complete_order->id))}}"><button type="button" class="btn btn-blue btn-xs"><i class="fa fa-eye"></i></button></a>
                                 <button id="{{$complete_order->id}}"  title="Feedback" type="button" class="feedback btn btn-success btn-xs pull-right"><i class="fa fa-comments-o" aria-hidden="true"></i></button>
                             </td>
                         </tr>

@@ -244,8 +244,6 @@ class ReportController extends Controller
             $vendor_details=DB::table('tbvendor')
                 ->where('tbvendor.id','=',$request->vendorId)
                 ->first();
-
-
         if($request->orderStatus=='all'){
             $order_list=DB::table('tborder_details')
             ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
@@ -255,7 +253,7 @@ class ReportController extends Controller
             ->leftjoin('tblocation','tborder_details.destinationLocationId','=','tblocation.id')
             ->select('tborder_details.*','tbvendor.name as vendor_name','tbzone.name as zone_name','tboffice_location.branchName','tbdimension.weight','tbdimension.size','tblocation.name as destination')
             ->where('tborder_details.vendorId','=',$request->vendorId)
-            ->WhereBetween('tborder_details.created_at',[$request->start_date,$request->end_date])
+            ->WhereBetween('tborder_details.order_date',[$request->start_date,$request->end_date])
             ->orderBy('tborder_details.id','ASC')
             ->get();
         }else{
@@ -268,7 +266,7 @@ class ReportController extends Controller
             ->select('tborder_details.*','tbvendor.name as vendor_name','tbzone.name as zone_name','tboffice_location.branchName','tbdimension.weight','tbdimension.size','tblocation.name as destination')
             ->where('tborder_details.vendorId','=',$request->vendorId)
             ->where('tborder_details.status','=',$request->orderStatus)
-            ->WhereBetween('tborder_details.created_at',[$request->start_date,$request->end_date])
+            ->WhereBetween('tborder_details.order_date',[$request->start_date,$request->end_date])
             ->orderBy('tborder_details.id','ASC')
             ->get();
         }
@@ -325,4 +323,48 @@ class ReportController extends Controller
 //               return $order_list;
               return view('report.order_history.driver_wise_order_history_data',compact('order_list','request'));
       }
+
+      //create emission report
+      public function create_emission_report(){
+         $data=DB::table('carbon_emission_report')->get();
+         $iddata=DB::table('carbon_emission_report')->first();
+         return view('report.carbon_emission.create',compact('data','iddata'));
+      }
+
+      //emission report save
+     public function create_emission_report_save(Request $request){
+            $insert=DB::table('carbon_emission_report')->where('id',$request->id)->update([
+               'january' =>$request->january,
+               'february' =>$request->february,
+               'march' =>$request->march,
+               'april' =>$request->april,
+               'may' =>$request->may,
+               'june' =>$request->june,
+               'july' =>$request->july,
+               'august' =>$request->august,
+               'september' =>$request->september,
+               'october' =>$request->october,
+               'november' =>$request->november,
+               'december' =>$request->december,
+            ]);
+         Session::flash('success','Carbon emission report has been update');
+         return redirect()->back();
+     }
+
+     public function order_rejected_report(){
+         return view('report.order_history.rejected_order_driver');
+     }
+
+     public function order_rejected_report_data(Request $request){
+        $data=DB::table('order_rejected')
+        ->leftjoin('tborder_details','order_rejected.order_id','=','tborder_details.id')
+        ->leftjoin('employee','order_rejected.driver_id','=','employee.id')
+        ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
+        ->select('tborder_details.selsOrderId','employee.name as driver_name','tbvendor.name as vendor_name','order_rejected.rejected_date','order_rejected.reason_of_rejected')
+        ->WhereBetween('rejected_date',[$request->start_date,$request->end_date])
+        ->orderBy('order_rejected.driver_id','DESC')
+        ->get();
+        return view('report.order_history.rejected_order_driver_history',compact('data'));
+     }
+
 } 

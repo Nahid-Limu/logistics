@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Driver Wise Payment History</div>
+            <div class="page-title"><b>Driver Wise Payment History</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -85,9 +85,9 @@
                             @foreach($orderlist as $key=>$list)
                                 <tr>
                                     <td class="serial">{{++$key}}</td>
-                                    <td class="name">{{$list->name}}</td>
-                                    <td class="orderId">{{$list->orderId}}</td>
-                                    <td class="vendorName">{{$list->vendorName}}</td>
+                                    <td class="name">{{$list->driver_name}}</td>
+                                    <td class="orderId">{{$list->selsOrderId}}</td>
+                                    <td class="vendorName">{{$list->assignedBy}}</td>
                                     <td class="date">{{date('d-m-Y', strtotime($list->created_at))}}</td>
                                     <td class="km"><input type="number" id="km" value="{{$list->km}}" min="0" class="span6 " /></td>
                                     <td><button class="btn btn-success btn-sm kmUpdate" value="{{$list->id}}" >Update</button></td>
@@ -110,9 +110,9 @@
         $(document).ready(function() {
             $('#example').DataTable();
             $('#example1').DataTable();
-            setTimeout(function() {
-                $('#alert_message').fadeOut('fast');
-            }, 5000);
+            $("#alert_message").fadeTo(1000, 500).slideUp(500, function(){
+                $("#alert_message").alert('close');
+            });
             
             //km negative value check
             $("#km").keyup(function() {
@@ -143,13 +143,7 @@
                         alert('km updated successfully...!!');
                     },
                     });
-                  
-               
-        
-                
                 });
-              
-              
         } );
     </script>
 @endsection

@@ -37,8 +37,9 @@ class LocationController extends Controller
      */
     public function create()
     {
-        $zone=DB::table('tbzone')->select('id','name')->orderBy('id','DESC')->get();
-        return view('settings.location.create',compact('zone'));
+        $zone=DB::table('tbzone')->select('id','name')->where('status',1)->orderBy('id','DESC')->get();
+        $area=DB::table('tbarea')->select('id','name')->where('status',1)->orderBy('id','DESC')->get();
+        return view('settings.location.create',compact('zone','area'));
     }
 
     /**
@@ -91,13 +92,14 @@ class LocationController extends Controller
      */
     public function edit($id)
     {
+        $area=DB::table('tbarea')->select('id','name')->where('status',1)->orderBy('id','DESC')->get();
         $location=DB::table('tblocation')
             ->leftjoin('users','tblocation.createdBy','=','users.id')
             ->leftjoin('tbzone','tblocation.zoneId','=','tbzone.id')
             ->select('tblocation.*','users.name as createdby','tbzone.name as zone_name')
             ->where('tblocation.id','=',$id)->first();
         $zone=DB::table('tbzone')->select('id','name as zone_name')->orderBy('id','DESC')->get();
-        return view('settings.location.edit',compact('location','zone'));
+        return view('settings.location.edit',compact('location','zone','area'));
     }
 
     /**
@@ -139,5 +141,14 @@ class LocationController extends Controller
     {
         //
     }
+
+
+    public function location_zone($id){
+       $data=DB::table('tbzone')->where('areaId',$id)->where('status',1)->get();
+       return response()->json($data);
+    }
+
+
+
 
 }

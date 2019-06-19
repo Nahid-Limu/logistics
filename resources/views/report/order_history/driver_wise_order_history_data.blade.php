@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Driver Wise Order History</div>
+            <div class="page-title"><b>Driver Wise Order History</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -17,12 +17,24 @@
         <div class="panel panel-blue">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-12">
-                        Driver Wise Order History (Report From: <b>{{date('d-m-Y', strtotime($request->start_date))}} to {{date('d-m-Y', strtotime($request->end_date))}}</b>)
-                    </div>
+                        <div class="panel-heading clearfix">
+                                <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Driver Wise Order History (Report From: <b>{{date('d-m-Y', strtotime($request->start_date))}} to {{date('d-m-Y', strtotime($request->end_date))}}</b>)</h4>
+                                <div class="btn-group pull-right">
+                                    <a href="#" id="p_advance_btn" class="btn btn-default btn-sm" type="button"  onclick="printDiv('advance_report')"><i class="fa fa-print"></i>Print</a>
+                                    
+                                </div>
+                            </div>
                 </div>
             </div>
             <div class="panel-body">
+                    <div id="advance_report">
+                            <div>
+                                    <h1 class="text-center">{{$information->company_name}}</h1>
+                                    <p class="text-center">{{$information->company_phone}}</p>
+                                    <p class="text-center">{{$information->company_email}}</p>
+                                    <p class="text-center">{{$information->company_address}}</p>
+                            </div>
+                            <br>
                 <table id="example" class="table table-hover table-bordered">
                     <thead>
                     <tr>
@@ -76,6 +88,7 @@
                     </tbody>
                 </table>
             </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -88,5 +101,13 @@
             }, 5000);
 
         } );
+
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
     </script>
 @endsection

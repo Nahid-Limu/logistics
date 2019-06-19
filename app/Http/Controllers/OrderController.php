@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use PDF;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -61,18 +62,38 @@ class OrderController extends Controller
 
     public function complete_order_list_details_vendor($id){
 
-        $order=DB::table('tborder_details')
-            ->leftjoin('tbvendor','tborder_details.vendorId','=','tbvendor.id')
-            ->leftjoin('tbzone','tborder_details.zoneId','=','tbzone.id')
-            ->leftjoin('tboffice_location','tborder_details.pickupLocationId','=','tboffice_location.id')
-            ->leftjoin('tbdimension','tborder_details.productDimension','=','tbdimension.id')
-            ->leftjoin('tblocation','tborder_details.destinationLocationId','=','tblocation.id')
-            ->select('tborder_details.*','tbvendor.*','tbvendor.name as vendor_name','tbzone.name as zone_name','tboffice_location.branchName','tbdimension.weight','tbdimension.size','tblocation.name as destination')
-            ->where('tborder_details.id',$id)
-            ->where('tborder_details.status',1)
-            ->first();
-        return view('sels_vendor.order.vendor_approve_order_details',compact('order'));
+
+        $id=base64_decode($id);
+        $exists=DB::table('tborder_details')
+            ->where('tborder_details.id','=',$id)
+            ->count();
+
+        if($exists>0){
+            $odetails=DB::table('tborder_details')
+                ->leftjoin('tbvendor','tbvendor.id','=','tborder_details.vendorId')
+                ->leftjoin('tboffice_location','tboffice_location.id','=','tborder_details.pickupLocationId')
+                ->leftjoin('tblocation','tblocation.id','=','tborder_details.destinationLocationId')
+                ->leftjoin('users','users.vendor_id','=','tborder_details.vendorId')
+                ->leftjoin('tbzone','tbzone.id','=','tborder_details.zoneId')
+                ->leftjoin('tbdimension','tbdimension.id','=','tborder_details.productDimension')
+                ->select('tborder_details.*','tbvendor.selsVendorId as selsVendorId','tbvendor.name as vendorName','tbvendor.phone as vendorPhone','tbvendor.address as vendorAddress','tbvendor.registrationNumber as registrationNumber','tbvendor.photo as vendorPhoto','tbzone.name as zoneName','tbdimension.weight as dimensionWeight','tbdimension.size as dimensionSize','users.name as vendorEmail','tboffice_location.branchName as pickupLocationName','tblocation.name as destinationLocationName')
+                ->where('tborder_details.id','=',$id)
+                ->first();
+            $delivery_history=DB::table('tborder_employee')
+                ->leftjoin('employee','employee.id','=','tborder_employee.employeeId')
+                ->leftjoin('users','users.id','=','tborder_employee.assignedBy')
+                ->where('tborder_employee.orderId','=',$odetails->id)
+                ->select('tborder_employee.*','employee.name','employee.selsEmployeeId','users.name as assigned_by')
+                ->get();
+
+            return view('sels_vendor.order.vendor_approve_order_details',compact('odetails','delivery_history'));
+        }else{
+            Session::flash('notFound','Sorry , Order ID does not exist. Try again...');
+            return redirect()->back();
+        }
     }
+
+
 
     public function vendor_feedback($id){
         $order=DB::table('tborder_details')->select('tborder_details.id','tborder_details.feedback')->where('id',$id)->get();
@@ -98,6 +119,7 @@ class OrderController extends Controller
             ->where('tborder_details.status',1)
             ->orderBy('tborder_details.vendorId','DESC')
             ->paginate(100);
+            
         return view('sels_vendor.order.admin.approved_order_list',compact('complete_order_list'));
     }
 
@@ -622,6 +644,45 @@ class OrderController extends Controller
                 return redirect()->back();
             }
       }
+
+
+    //   public function barcode($id)
+    //     {   
+
+    //         $id=base64_decode($id);
+    //         $odetails=DB::table('tborder_details')
+    //          ->where('tborder_details.id','=',$id)
+    //         ->leftjoin('tbdimension','tbdimension.id','=','tborder_details.productDimension')
+    //         ->leftjoin('tboffice_location','tboffice_location.id','=','tborder_details.pickupLocationId')
+    //         ->leftjoin('tbzone','tbzone.id','=','tborder_details.zoneId')
+    //         ->leftjoin('tbarea','tbarea.id','=','tbzone.areaId')
+    //         ->select('tborder_details.*','tbdimension.weight as dimensionWeight','tbdimension.size as dimensionSize', 'tboffice_location.branchName as branchName', 'tbzone.name as zoneName', 'tbarea.name as areaName' )
+    //         ->first();
+    //         return view('sels_vendor.order.admin.barcode',compact('odetails'));
+    //         // return 'ok';
+    //     }
+
+      public function generatePDF($id)
+        {   
+
+            $id=base64_decode($id);
+            $odetails=DB::table('tborder_details')
+             ->where('tborder_details.id','=',$id)
+            ->leftjoin('tbdimension','tbdimension.id','=','tborder_details.productDimension')
+            ->leftjoin('tboffice_location','tboffice_location.id','=','tborder_details.pickupLocationId')
+            ->leftjoin('tbzone','tbzone.id','=','tborder_details.zoneId')
+            ->leftjoin('tbarea','tbarea.id','=','tbzone.areaId')
+            ->select('tborder_details.*','tbdimension.weight as dimensionWeight','tbdimension.size as dimensionSize', 'tboffice_location.branchName as branchName', 'tbzone.name as zoneName', 'tbarea.name as areaName' )
+            ->first();
+            // return view('sels_vendor.order.admin.barcode',compact('odetails'));
+            // return 'ok';
+
+             $data = ['title' => 'Welcome to HDTuto.com'];
+
+                $pdf = PDF::loadView('sels_vendor.order.admin.barcodePDF',compact('odetails'));
+
+                return $pdf->download('hdtuto.pdf');
+        }
 
 
 

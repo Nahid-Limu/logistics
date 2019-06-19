@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Track Order</div>
+            <div class="page-title"><b>Track Order</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -33,32 +33,36 @@
                                         <li>Order Status: <b>
                                                 @if($item->order_status==1)
                                                     <span style="color:green;">Approved</span>
-                                                @else
-                                                    <span style="color:green;">Complete</span>
+                                                @endif
+                                                @if($item->order_status==0)
+                                                  <span style="color:#FF8C00;">Pending</span>
                                                 @endif
                                             </b>
                                         </li>
                                         <li>Delivery Status: <b>
-                                                @if($item->assigned_status==3)
-                                                    Delivered
-                                                @endif
 
-                                                @if($item->assigned_status==2)
-                                                    Assigned
-                                                @endif
+                                                @if($item->assigned_status=='')
+                                                    Not Assigned
+                                                    @else
+                                                    @if($item->assigned_status==3)
+                                                        Delivered
+                                                    @endif
 
-                                                @if($item->assigned_status==1)
-                                                    Confirm
-                                                @endif
+                                                    @if($item->assigned_status==2)
+                                                        Assigned
+                                                    @endif
 
-                                                @if($item->assigned_status==0)
-                                                    Cancel
+                                                    @if($item->assigned_status==1)
+                                                        Confirm
+                                                    @endif
+
+                                                    @if($item->assigned_status==0)
+                                                        Cancel
+                                                    @endif
                                                 @endif
                                             </b>
                                         </li>
-
-                                        <li>Assigned By:{{$item->assignby}}</li>
-
+                                        <li>Assigned By:@if($item->assignby=='') Not found @else {{$item->assignby}} @endif</li>
                                     </ul>
                                 </div>
                             </div>

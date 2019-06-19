@@ -266,10 +266,11 @@ class PaymentController extends Controller
     public function payment_to_driver()
     {
         $driver=DB::table('employee')
-        ->leftJoin('users','employee.id','=','emp_id')
+        ->leftJoin('users','employee.id','=','users.emp_id')
         ->where('users.is_permission','=','6')
         ->select('employee.*','users.is_permission')
         ->get();
+        
         //dd($employees);
         return view('payments.Driver_payment.payment_to_driver',compact('driver'));
     }
@@ -313,15 +314,14 @@ class PaymentController extends Controller
         
         $orderlist=DB::table('tborder_employee')
             ->leftJoin('employee','tborder_employee.employeeId','=','employee.id')
-            ->leftJoin('tbvendor','tborder_employee.assignedBy','=','tbvendor.id')
-            ->leftJoin('users','employee.id','=','emp_id')
-            ->where('users.is_permission','=','6')
+            ->leftJoin('tborder_details','tborder_employee.orderId','=','tborder_details.id')
+            ->leftJoin('users','tborder_employee.assignedBy','=','users.id')
+            ->select('tborder_employee.id', 'tborder_employee.created_at', 'tborder_employee.km', 'employee.name as driver_name', 'tborder_details.selsOrderId', 'users.name as assignedBy')
+            ->where('tborder_employee.employeeId','=',$request->driverId)
+            
             ->where('tborder_employee.k_status', 0)
-            ->select('employee.*','tborder_employee.*', 'tbvendor.name as vendorName')
-            ->where('emp_id','=',$request->driverId)
-            ->where('tborder_employee.status', 3)
             ->get();
-        
+        //dd($orderlist);
         $totalamount = ($totalKm * $perOrderCost->fuel_cost)+($completedOrder * $perOrderCost->per_order_cost);
         
         $paid = (DB::table('tbdriver_payment')

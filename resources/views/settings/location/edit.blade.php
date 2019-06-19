@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Edit Location Information</div>
+            <div class="page-title"><b>Edit Location Information</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -28,9 +28,20 @@
                     <div class="panel-body pan">
                             {{Form::open(['method'=>'PATCH','action'=>['LocationController@update',$location->id]])}}
 
+
+                                <div class="form-group">
+                                    <label>Select Area<span style="color: red">*</span></label>
+                                    <select class="form-control classname" name="areaId" id="areaId" required>
+                                        <option value="">Select Area</option>
+                                        @foreach($area as $areas)
+                                            <option value="{{$areas->id}}">{{$areas->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                  <div class="form-group">
                                      <label>Select Zone<span style="color: red">*</span></label>
-                                     <select class="form-control classname" name="zoneId">
+                                     <select class="form-control classname" name="zoneId" id="zoneId">
                                          @foreach($zone as $zones)
                                              @php
                                                  $selected = '';
@@ -92,6 +103,31 @@
     <script>
         $(document).ready(function() {
             $('.classname').select2({width: 'resolve'});
+            $("#areaId").change(function(){
+                var id = $(this).val();
+                var url = "{{url('location/wise/zone')}}"+"/"+id;
+                var formData = {
+                    id: $(this).val(),
+                }
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        var zone_data = '';
+                        zone_data+='<option value="">Select Zone</option>'
+                        $.each(data, function (i, item) {
+                            zone_data += '<option value="'+item.id+'">'+item.name+'</option>';
+                        });
+                        $('#zoneId').html(zone_data);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
         });
     </script>
 @endsection

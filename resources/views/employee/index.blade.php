@@ -5,7 +5,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Employee List</div>
+            <div class="page-title"><b>Employee List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -48,6 +48,7 @@
 
                     <div class="col-md-4" style="text-align: right;">
                         <a href="{{route('employee.create')}}" class="add-new-modal btn btn-success btn-square btn-sm"> <i class="fa fa-plus"></i> Add New</a>
+                         
                     </div>
                 </div>
             </div>
@@ -98,6 +99,7 @@
                             <td>
                                 <a class="view-modal-btn" target="_blank" href="{{route('employee.show',base64_encode($e->id))}}"><button type="button" class="btn btn-blue btn-xs"><i class="fa fa-eye"></i></button></a>&nbsp;&nbsp;&nbsp;
                                 {{--<a class="edit-modal-btn" href="{{route('vendor_edit',$e->id)}}"> <button type="button" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i></button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--}}
+                                 <a onclick="return confirm('are you sure to Delete?')" class="btn btn-danger  btn-xs " href="{{route('employee_delete',base64_encode($e->id))}}"><i class="fa fa-trash-o"></i></a>
                             </td>
                         </tr>
                     @endforeach

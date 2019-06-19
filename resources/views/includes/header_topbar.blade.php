@@ -17,7 +17,12 @@
 
                     <li class="dropdown topbar-user"><a data-hover="dropdown" href="#" class="dropdown-toggle"><img src="https://s3.amazonaws.com/uifaces/faces/twitter/kolage/48.jpg" alt="" class="img-responsive img-circle"/>&nbsp;<span class="hidden-xs">{{ Auth::user()->name }}</span>&nbsp;<span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-user pull-right">
-                            {{--<li><a href=""><i class="fa fa-user"></i>My Profile</a></li>--}}
+                            @if(checkPermission(['admin']) || checkPermission(['super']))
+                            <li><a href="{{url('admin/password/reset')}}"><i class="fa fa-user"></i>Update Password</a></li>
+                            @endif
+                            @if(checkPermission(['vendor']))
+                                    <li><a href="{{url('vendor/password/reset')}}"><i class="fa fa-user"></i>Update Password</a></li>
+                            @endif
                             {{--<li><a href="#"><i class="fa fa-envelope"></i>My Inbox<span class="badge badge-danger">3</span></a></li>--}}
                             {{--<li><a href="#"><i class="fa fa-tasks"></i>My Tasks<span class="badge badge-success">7</span></a></li>--}}
                             {{--<li class="divider"></li>--}}

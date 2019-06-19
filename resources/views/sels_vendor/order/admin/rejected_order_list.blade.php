@@ -1,10 +1,10 @@
-@extends('layouts.master')
+ @extends('layouts.master')
 @section('title', 'Rejected Order List')
 @section('content')
-    <!--BEGIN TITLE & BREADCRUMB PAGE-->
+
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Rejected Order List</div>
+            <div class="page-title"><b>Rejected Order List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -12,7 +12,7 @@
         </ol>
         <div class="clearfix"></div>
     </div>
-    <!--END TITLE & BREADCRUMB PAGE-->
+  
     <div class="page-content">
         @if(Session::has('success'))
             <p id="alert_message" class="alert alert-success">{{ Session::get('success') }}</p>
@@ -53,10 +53,10 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         @if($rejected->status==2)
-                                            {{Form::open(array('route' => 'pending_order_approve','method' => 'post'))}}
-                                            <button onclick="return confirm('are you sure?')" value="{{$rejected->main_id}}" style="padding: 1px 5px;" data-toggle="tooltip" data-placement="bottom" title="Approve Order" type="submit" name="order_id" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
+                                            {{Form::open(array('route' => 'pending_order_approvessss','method' =>'post'))}}
+                                            <button onclick="return confirm('are you sure?')" value="{{$rejected->main_id}}" style="padding: 1px 5px;" data-toggle="tooltip" data-placement="bottom" title="Approve Order" type="submit" name="order_ids" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
                                             {{ Form::close() }}
-                                        @endif
+                                        @endif 
                                     </div>
                                 </div>
                             </td>
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    {{--<div id="modal-header-primary" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" class="modal fade">--}}
+    <div id="modal-header-primary" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" class="modal fade">
     @include('user.modal.create-modal');
 
     @include('user.modal.edit-modal');

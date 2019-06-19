@@ -128,4 +128,35 @@ class ProfileController extends Controller
         Session::flash('admin_update', 'Update Successful!');
         return redirect()->back();
     }
+
+
+    //admin password change view
+    public function admin_password_charge_view(){
+       return view('profile.password..admin_password');
+    }
+
+    //admin password update
+    public function admin_password_update(Request $request){
+        $update=DB::table('users')->where('id',auth()->user()->id)->update([
+           'password' =>Hash::make($request['password'])
+        ]);
+        Session::flash('message','password has been Successfully Update');
+        return redirect()->back();
+    }
+
+    //vendor password change view
+    public function vendor_password_charge_view(){
+        return view('profile.password.vendor_password');
+    }
+
+    //vendor password update
+    public function vendor_password_update(Request $request){
+        $update=DB::table('users')->where('vendor_id',auth()->user()->vendor_id)->update([
+            'password' =>Hash::make($request['password'])
+        ]);
+        Session::flash('message','password has been Successfully Update');
+        return redirect()->back();
+    }
+
+
 }

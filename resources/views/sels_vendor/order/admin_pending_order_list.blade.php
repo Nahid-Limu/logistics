@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Pending Order List</div>
+            <div class="page-title"><b>Pending Order List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -14,6 +14,9 @@
     </div>
     <!--END TITLE & BREADCRUMB PAGE-->
     <div class="page-content">
+	   @if(Session::has('success'))
+            <p id="alert_message" class="alert alert-success">{{ Session::get('success') }}</p>
+        @endif
         <div class="panel panel-blue">
             <div class="panel-heading">
                 <div class="row">
@@ -61,11 +64,11 @@
                                     Pending
                                 @endif
                             </td>
-                            <td>
-                                <a target="_blank" class="btn btn-blue btn-sm" href="{{route('order.order_details_by_id',base64_encode($pending_order->main_id))}}"><i class="fa fa-eye"></i></a>
-                                
+                            <td style="display: flex">
+                                <a style="margin-right: 5px" target="_blank" class="btn btn-warning btn-sm" href="{{route('order.order_details_by_id',base64_encode($pending_order->main_id))}}"><i class="fa fa-eye"></i></a>
                                 @if($pending_order->status==0)
-                                    <a onclick="return confirm('are you sure to cancel?')" class="btn btn-success btn-sm" href="{{route('pending_order_approve',base64_encode($pending_order->main_id))}}"><i class="fa fa-check"></i></a>
+                                    <a style="width: 45%" onclick="return confirm('are you sure to cancel?')" class="btn btn-success btn-sm" href="{{route('pending_order_approve',base64_encode($pending_order->main_id))}}"><i class="fa fa-check"></i></a>
+						
                                 @endif
                             </td>
                         </tr>
@@ -75,17 +78,6 @@
             </div>
         </div>
     </div>
-
-    {{--<div id="modal-header-primary" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" class="modal fade">--}}
-    @include('user.modal.create-modal');
-
-    @include('user.modal.edit-modal');
-
-    @include('user.modal.view-modal');
-
-    @include('user.modal.delete-modal');
-
-
 @endsection
 @section('extra_js')
     <script>
@@ -94,7 +86,6 @@
             setTimeout(function() {
                 $('#alert_message').fadeOut('fast');
             }, 5000);
-
         } );
     </script>
 @endsection

@@ -59,7 +59,7 @@ class DashboardController extends Controller
       $pieApprove = DB::select("SELECT COUNT(status) a_Status from tborder_details WHERE status = 1 and order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)");
       $pieDelivered = DB::select("SELECT COUNT(status) d_Status from tborder_details WHERE status = 3 and order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)");
       
-       //dd($chartData);
+      //dd($chartData);
       
       
       if(checkPermission(['vendor'])) {

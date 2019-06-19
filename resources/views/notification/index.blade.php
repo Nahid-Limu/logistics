@@ -1,12 +1,10 @@
-
-
 @extends('layouts.master')
 @section('title', 'Pending Order List')
 @section('content')
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Pending Order List</div>
+            <div class="page-title"><b>Pending Order List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -16,6 +14,9 @@
     </div>
     <!--END TITLE & BREADCRUMB PAGE-->
     <div class="page-content">
+        @if(Session::has('success'))
+            <p id="alert_message" class="alert alert-success">{{ Session::get('success') }}</p>
+        @endif
         <div class="panel panel-blue">
             <div class="panel-heading">
             </div>
@@ -60,8 +61,8 @@
                                     </div>
                                     <div class="col-md-3">
                                         @if($pending_order->order_status==0)
-                                            {{Form::open(array('route' => 'pending_order_approve','method' => 'post'))}}
-                                               <button onclick="return confirm('are you sure?')" value="{{$pending_order->main_id}}" style="padding: 1px 5px;" data-toggle="tooltip" data-placement="bottom" title="Approve Order" type="submit" name="order_id" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
+                        {{Form::open(array('route' => 'pending_order_approves','method' => 'post'))}}
+                                               <button name="order_ids" onclick="return confirm('are you sure?')" value="{{$pending_order->main_id}}" style="padding: 1px 5px;" data-toggle="tooltip" data-placement="bottom" title="Approve Order" type="submit" name="order_id" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
                                             {{ Form::close() }}
                                        @endif
                                     </div>
@@ -71,28 +72,17 @@
                     @endforeach
                     </tbody>
                 </table>
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-
-    {{--<div id="modal-header-primary" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" class="modal fade">--}}
-    {{--@include('user.modal.create-modal');--}}
-
-    {{--@include('user.modal.edit-modal');--}}
-
-    {{--@include('user.modal.view-modal');--}}
-
-    {{--@include('user.modal.delete-modal');--}}
-
-
+            </div>
+        </div>
+    </div>
 @endsection
 @section('extra_js')
     <script>
         $(document).ready(function() {
             $('#example').DataTable();
-            setTimeout(function() {
-                $('#alert_message').fadeOut('fast');
-            }, 5000);
+            $("#alert_message").fadeTo(1000, 500).slideUp(500, function(){
+                $("#alert_message").alert('close');
+            });
 
         } );
     </script>

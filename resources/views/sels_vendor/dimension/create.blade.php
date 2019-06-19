@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Create New Delivery Charge</div>
+            <div class="page-title"><b>Create New Delivery Charge</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -42,14 +42,14 @@
                                     <hr>
                                     <table class="table table-hover table-bordered">
                                         <tr>
-                                            <th>Dimension</th>
                                             <th>Weight</th>
+                                            <th>Dimension</th>
                                             <th>Price</th>
                                         </tr>
                                         @foreach($dimension as $dimensions)
                                             <tr>
-                                                <td><input type="text" class="form-control" name="size[]" value="{{$dimensions->size}}" disabled></td>
                                                 <td><input type="text" class="form-control" name="weight[]" value="{{$dimensions->weight}}" disabled></td>
+                                                <td><input type="text" class="form-control" name="size[]" value="{{$dimensions->size}}" disabled></td>
                                                 <td><input type="number" class="form-control" name="price[]" placeholder="Enter Price" autocomplete="off"></td>
                                                 <input type="hidden" name="dimensionId[]" value="{{$dimensions->id}}">
                                             </tr>

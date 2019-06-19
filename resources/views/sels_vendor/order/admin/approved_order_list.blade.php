@@ -5,7 +5,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title"> Approved Order List</div>
+            <div class="page-title"> <b>Approved Order List</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{url('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -64,6 +64,7 @@
                             <td>@money($complete->deliveryCharge)</td>
                             <td>
                                 <a target="_blank" class="btn btn-blue btn-sm" href="{{route('order.order_details_by_id',base64_encode($complete->id))}}"><i class="fa fa-eye"></i></a>
+                                <a target="_blank" class="btn btn-blue btn-sm" href="{{route('orderqr.order_details_by_id',base64_encode($complete->id))}}"><i class="fa fa-barcode"></i></a>
 
                                 <a onclick="return confirm('are you sure to cancel?')"  class="btn btn-warning btn-sm" href="{{route('approve_order_cancel',base64_encode($complete->main_id))}}"><i class="fa fa-ban"></i></a>
 

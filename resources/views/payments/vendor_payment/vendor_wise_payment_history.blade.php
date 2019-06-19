@@ -7,7 +7,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Vendor Wise Payment History</div>
+            <div class="page-title"><b>Vendor Wise Payment History</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -83,8 +83,8 @@
     });
     $("#vendorId").select2();
   });
-  setTimeout(function() {
-    $('#alert_message').fadeOut('fast');
-  }, 5000);
+  $("#alert_message").fadeTo(1000, 500).slideUp(500, function(){
+      $("#alert_message").alert('close');
+  });
 </script>
 @endsection

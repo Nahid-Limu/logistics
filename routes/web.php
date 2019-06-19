@@ -77,8 +77,25 @@ Route::group(['middleware'=>'auth'],function () {
 
 
  //notification route start
-    Route::get('/pending/notification/{id}',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@index'])->name('pending_notification_list');
-    Route::post('/pending/order/approve/',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@order_approve'])->name('pending_order_approve');
+    Route::get('/pending/notify/{id}',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@index'])->name('pending_notification_list');
+
+    Route::get('/pending/order/approve/{id}',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@order_approve'])->name('pending_order_approve');
+
+
+     Route::post('/pending/order/approve/admin/',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@order_approve_by_admin'])->name('pending_order_approvessss');
+
+
+
+   Route::post('/pending/order/approve/admin/wise',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@order_approve_by_admin'])->name('pending_order_approves');
+
+
+
+
+
+
+
+    
+
     Route::get('/approve/order/cancel/{id}',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@order_cancel'])->name('approve_order_cancel');
     Route::get('/pending/order/details/{id}',['middleware'=>'check-permission:super|admin','uses' =>'NotificationController@pending_order_details'])->name('pending_order_details');
  //notification route end
@@ -96,13 +113,18 @@ Route::group(['middleware'=>'auth'],function () {
         Route::resource('/area', 'AreaController');
         Route::resource('/zone', 'ZoneController');
         Route::resource('/location', 'LocationController');
+        Route::get('/location/wise/zone/{id}', 'LocationController@location_zone');
 //Settings route End
 
 
 //Employee route start
         Route::get('/employee/create',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@create'])->name('employee.create');
         Route::get('/employee',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@index'])->name('employee.index');
+
+        Route::get('employee/delete/{id}',['middleware'=>'check-permission:super|admin','uses' =>'EmployeeController@employee_delete'])->name('employee_delete');
+
         Route::get('/driver',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@driver_index'])->name('employee.driver_index');
+        Route::get('driver/delete/{id}',['middleware'=>'check-permission:super|admin','uses' =>'EmployeeController@diver_delete'])->name('diver_delete');
         Route::get('/employee_search',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@employee_search']);
         Route::get('/driver_search',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@driver_search']);
         Route::get('/employee/{id}',['middleware'=>'check-permission:admin|super|executive', 'uses'=>'EmployeeController@show'])->name('employee.show');
@@ -171,7 +193,9 @@ Route::group(['middleware'=>'auth'],function () {
         Route::get('/report/track/order',['middleware'=>'check-permission:vendor','uses'=>'VendorController@track_order'])->name('vendor.track.order');
         Route::post('/report/track/order/data',['middleware'=>'check-permission:vendor','uses'=>'VendorController@track_order_data'])->name('vendor.track.order.data');
         Route::post('/report/track/order/data/all',['middleware'=>'check-permission:vendor','uses'=>'VendorController@track_order_data_all'])->name('vendor.track.order.data.all');
-
+        
+        Route::post('/report/track/order/data/all/dateWise',['middleware'=>'check-permission:vendor','uses'=>'VendorController@track_order_data_all_date_wise'])->name('vendor.track.order.data.all.date');
+        Route::get('/report/track/order/data/details/{id}',['middleware'=>'check-permission:vendor','uses'=>'VendorController@track_order_data_details'])->name('vendor.track.order.details');
 // End Report Area
 
 
@@ -182,8 +206,10 @@ Route::group(['middleware'=>'auth'],function () {
 
 
     //Driver charge
-    Route::get('driverCharge',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@index'])->name('driverCharge');
-    Route::post('driverCharge/update',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@insertCost'])->name('driverCharge.update');
+    Route::get('driverChargeOrder',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@index'])->name('driverChargeOrder');
+    Route::get('driverChargeFuel',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@fuel'])->name('driverChargeFuel');
+    Route::post('driverCharge/update',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@insertCostOrder'])->name('driverCharge.update');
+    //Route::post('driverCharge/update',['middleware'=>'check-permission:admin|super|executive','uses'=>'DriverCharge@insertCostFuel'])->name('driverCharge.fuel.update');
     //Driver charge
 
 
@@ -210,10 +236,12 @@ Route::group(['middleware'=>'auth'],function () {
 
     Route::get('/order/view/details/{id}',['middleware'=>'check-permission:admin|super','uses' =>'OrderController@order_profile_by_id'])->name('order.order_details_by_id');
 
+   
 
 
     //rating route start
-    Route::get('/rating',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@create_rating'])->name('rating');
+    Route::get('/rating/vendor',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@create_rating_vendor'])->name('vendor.rating');
+    Route::get('/rating/driver',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@create_rating_driver'])->name('driver.rating');
     Route::get('/rating/order/search',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@search_order_id_wise_rating'])->name('rating.order.search');
     Route::post('/rating/driver/store',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@driver_rating_store'])->name('rating.driver.store');
     Route::post('/rating/vendor/store',['middleware'=>'check-permission:admin|super','uses'=>'VendorController@vendor_rating_store'])->name('rating.vendor.store');
@@ -223,6 +251,50 @@ Route::group(['middleware'=>'auth'],function () {
     //vendor payment summery
      Route::get('/vendor/transaction/history',['middleware'=>'check-permission:vendor','uses'=>'PaymentController@vendor_transaction_history_admin'])->name('vendor_transaction_history');
     //vendor payment summery end
+
+
+    //carbon emission report
+      Route::get('/create/emission/report',['middleware'=>'check-permission:admin|super','uses'=>'ReportController@create_emission_report']);
+      Route::post('/create/emission/report/save',['middleware'=>'check-permission:admin|super','uses'=>'ReportController@create_emission_report_save'])->name('emission.save');
+    //carbon emission report
+
+
+        //expense
+        Route::get('/expense/index',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@index'])->name('expense.index');
+        Route::get('/expense/setting',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@expenseSettings'])->name('expense.setting');
+        Route::post('/expense/addexpense',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@addExpense'])->name('expense.add');
+        Route::post('/expense/editexpense',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@editExpense'])->name('expense.edit');
+        Route::get('/expense/settings/delete/{id}',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@deleteExpense'])->name('expense.delete');
+        Route::post('/expense/addDaily',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@addDailyExpense'])->name('addDaily.expense');
+        Route::get('/expense/deleteDaily/{id}',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@deleteDailyExpense'])->name('deleteDaily.expense');
+        Route::get('/expense/history',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@date_wise_expense_history'])->name('expense.history');
+        Route::post('/expense/history/data',['middleware'=>'check-permission:admin|super|executive','uses'=>'ExpenseController@date_wise_expense_history_data'])->name('expense.history.data');
+
+        //profit
+        Route::get('/profit/index',['middleware'=>'check-permission:admin|super|executive','uses'=>'ProfitController@profit'])->name('profit.index');
+        Route::get('/profit/dateWise',['middleware'=>'check-permission:admin|super|executive','uses'=>'ProfitController@profit_date_wise'])->name('profit.profit_date_wise');
+        Route::post('/profit/dateWiseData',['middleware'=>'check-permission:admin|super|executive','uses'=>'ProfitController@profit_date_wise_date'])->name('profit.profit_date_wise_data');
+
+
+
+        //admin password change route
+        Route::get('admin/password/reset',['middleware'=>'check-permission:admin|super','uses'=>'ProfileController@admin_password_charge_view']);
+        Route::post('admin/password/update',['middleware'=>'check-permission:admin|super','uses'=>'ProfileController@admin_password_update']);
+        //admin password change route
+
+        //vendor password change route
+        Route::get('vendor/password/reset',['middleware'=>'check-permission:vendor','uses'=>'ProfileController@vendor_password_charge_view']);
+        Route::post('vendor/password/update',['middleware'=>'check-permission:vendor','uses'=>'ProfileController@vendor_password_update']);
+        //vendor password change route
+
+       //rejected order report driver
+        Route::get('report/rejected/order',['middleware'=>'check-permission:admin|vendor','uses'=>'ReportController@order_rejected_report'])->name('report.rejected.order');
+        Route::post('report/rejected/order/driver',['middleware'=>'check-permission:admin|vendor','uses'=>'ReportController@order_rejected_report_data'])->name('report.rejected.order.data');
+       //rejected order report driver
+
+
+        //  barcode generatepdf
+         Route::get('barcode/{id}',['middleware'=>'check-permission:admin|super','uses' =>'OrderController@generatePDF'])->name('orderqr.order_details_by_id');
 
 
 });

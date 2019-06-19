@@ -1,3 +1,8 @@
+<style>
+	#sum_box .db:hover{
+		color: red;
+	}
+</style>
 @extends('layouts.master')
 @section('title', 'Dashboard')
 <script>
@@ -6,7 +11,7 @@ window.onload = function () {
 		animationEnabled: true,
 		theme: "light2",
 		title:{
-			text: "Last 30 Days Delevered Order"
+			text: "Last 30 Days Delivered Order"
 		},
 		axisY:{
 			includeZero: false
@@ -46,7 +51,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 			}
 			foreach ($pieApprove as $approve) {
 				
-				echo '{ y: '.$approve->a_Status.',label: "Approve Order", color: "chartreuse"  },';
+				echo '{ y: '.$approve->a_Status.',label: "Approved Order", color: "chartreuse"  },';
 			}
 			foreach ($pieDelivered as $delivered) {
 				
@@ -66,7 +71,7 @@ chart.render();
 		<!--BEGIN TITLE & BREADCRUMB PAGE-->
 		<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
 			<div class="page-header pull-left">
-				<div class="page-title">Dashboard</div>
+				<div class="page-title"><b>Dashboard</b></div>
 			</div>
 			<ol class="breadcrumb page-breadcrumb pull-right">
 				<li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -225,12 +230,12 @@ chart.render();
 			@endif
 			@if(checkPermission(['vendor']))
 				<div class="col-md-12">
-								<div style="margin-left: 0px" class="col-sm-6 col-md-6">
-									<div class="panel visit db mbm">
+								<div style="" class="col-sm-6 col-md-6 col-md-offset-3">
+									<div class="panel visit  mbm">
 										<div class="panel-body"><p class="icon">
 												@foreach($average_rating as $average)
 													@for($i=0;$i<round($average->Average,0);$i++)
-														<i class="icon fa fa-star"></i>
+														<i class="icon fa fa-star" style="color: orange; font-size: 30px;"></i>
 												    @endfor
 												@endforeach
 										</p><h4 class="value"><span>@foreach($average_rating as $average) {{round($average->Average,0)}} @endforeach</span></h4>

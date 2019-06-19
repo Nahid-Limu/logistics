@@ -4,7 +4,7 @@
     <!--BEGIN TITLE & BREADCRUMB PAGE-->
     <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
         <div class="page-header pull-left">
-            <div class="page-title">Update Delivery Charge</div>
+            <div class="page-title"><b>Update Delivery Charge</b></div>
         </div>
         <ol class="breadcrumb page-breadcrumb pull-right">
             <li><i class="fa fa-home"></i>&nbsp;<a href="{{URL('/')}}">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
@@ -38,14 +38,14 @@
                                <h4 class="text-center">Vendor:   {{$single_vendor->name}}</h4>
                                 <table class="table table-hover table-bordered">
                                     <tr>
-                                        <th>Dimension</th>
                                         <th>Weight</th>
+                                        <th>Dimension</th>
                                         <th>Price</th>
                                     </tr>
                                         @foreach($dimension as $dimensions)
                                             <tr>
-                                                <td><input type="text" class="form-control" name="size[]" value="{{$dimensions->size}}" disabled></td>
                                                 <td><input type="text" class="form-control" name="weight[]" value="{{$dimensions->weight}}" disabled></td>
+                                                <td><input type="text" class="form-control" name="size[]" value="{{$dimensions->size}}" disabled></td>
                                                 <td><input type="text" class="form-control" name="price[]" placeholder="Enter Price" value="{{$dimensions->price}}"></td>
                                                 <input type="hidden" name="dimensionId[]" value="{{$dimensions->dimensionId}}">
                                             </tr>
@@ -70,9 +70,9 @@
 @section('extra_js')
     <script>
         $(document).ready(function() {
-            setTimeout(function() {
-                $('#alert_message').fadeOut('fast');
-            }, 5000);
+            $("#alert_message").fadeTo(1000, 500).slideUp(500, function(){
+                $("#alert_message").alert('close');
+            });
         });
     </script>
 @endsection

@@ -29,7 +29,7 @@ class OrderController extends Controller
     {
         $offices=DB::table('tboffice_location')
             ->leftjoin('tbvendor','tboffice_location.areaId','=','tbvendor.areaId')
-            ->select('tboffice_location.branchName','tboffice_location.id as pickupid')
+            ->select('tboffice_location.id as pickupid','tboffice_location.branchName','tboffice_location.latitude','tboffice_location.longitude')
             ->where('tbvendor.id',auth()->user()->vendor_id)
             ->get();
         return response()->json($offices); 
@@ -70,13 +70,44 @@ class OrderController extends Controller
         return response()->json($dimension); 
             
     }
+    
+    
+    
+       //order location zone wise
+    public function get_location_zone_wise(Request $request){
+      
+        $data=DB::table('tblocation')
+        ->select('tblocation.id as destinationLocationId','tblocation.zoneId','tblocation.name','tblocation.latitude','tblocation.longitude')
+        ->where('zoneId',$request->zoneId)
+        ->get();
+        return response()->json($data);
+    }
+
+
+
 
     public function order_store(Request $request){
+        
+        $request->validate([
+        'pickupLocationId' => 'required',
+        'zoneId' => 'required',
+        'destinationLocationId' => 'required',
+        'paymentMethod' => 'required',
+         'receiverName' => 'required',
+        'receiverPhone' => 'required',
+        'receiverAddress' => 'required',
+        'productTitle' => 'required',
+        'productPrice' => 'required',
+        'productDimension' => 'required',
+        'productQuantity' => 'required',
+        'deliveryCharge' => 'required',
+        ]);
         
         $order=DB::table('tborder_details')->insert([
             'selsOrderId'=>$this->random_id(),
             'vendorId'=>auth()->user()->vendor_id,
             'pickupLocationId'=>$request->pickupLocationId,
+            'paymentMethod'=>$request->paymentMethod,
             'zoneId'=>$request->zoneId,
             'destinationLocationId'=>$request->destinationLocationId,
             'receiverName'=>$request->receiverName,
@@ -92,19 +123,20 @@ class OrderController extends Controller
             'created_at' =>Carbon::now()->toDateTimeString(),
             'updated_at' =>Carbon::now()->toDateTimeString(),
         ]);
-        if ($order) {
-            return response()->json("Order Store SuccessFully");
-        }
+            return response()->json(['message'=>'Order has placed successfully']);
         
     }
-
-
-
+    
+    
     //get delivery price ajax vendor wise
     public function delivery_charge_price(Request $request){
         $data=DB::table('delivery_charge')->select('dimensionId','price')->where('dimensionId',$request->dimensionId)->get();
         return response()->json($data);
     }
-
-
+    
+    
+    
+    
+    
+    
 }
